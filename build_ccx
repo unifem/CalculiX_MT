@@ -2,14 +2,18 @@
 
 echo "** Building ARPACK - may take several minutes! **"
 echo
-cd ARPACK; make lib; make clean; cd ..
+cd ARPACK; make lib; cd ..
 
 echo "** Building Spooles - may take several minutes! **"
 echo
-cd SPOOLES.2.2; make lib; make clean; cd ..
+cd SPOOLES.2.2; make lib; cd ..
 
 echo "** Building Calculix - may take several minutes! **"
 echo
-cd CalculiX/ccx_2.13/src/; make -f Makefile_MT; make -f Makefile_MT clean; cd ../../..
+cd CalculiX/ccx_2.13/src/; make -f Makefile_MT; cd ../../..
 
-cp CalculiX/ccx_2.13/src/ccx_2.13_MT ./; chmod 711 ccx_2.13_MT
+# Move executable
+mv CalculiX/ccx_2.13/src/ccx_2.13_MT ./; chmod 711 ccx_2.13_MT
+
+# Cleanup files
+rm -rf `find . -name "*.[oa]"`
