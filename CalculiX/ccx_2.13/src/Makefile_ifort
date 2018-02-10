@@ -1,0 +1,28 @@
+CFLAGS = -w -O3 -fopenmp -DARCH="Linux" -DMKL_ILP64 -DPARDISO -DLONGLONG -DARPACK -DMATRIXSTORAGE -DUSE_MT=1
+FFLAGS = -w -O3 -fopenmp -i8
+
+CC=icc
+FC=ifort
+
+.c.o :
+	$(CC) $(CFLAGS) -c $<
+.f.o :
+	$(FC) $(FFLAGS) -c $<
+
+include Makefile.inc
+
+SCCXMAIN = ccx_2.11.c
+
+OCCXF = $(SCCXF:.f=.o)
+OCCXC = $(SCCXC:.c=.o)
+OCCXMAIN = $(SCCXMAIN:.c=.o)
+
+LIBS = \
+       ../../../ARPACK/libarpack_INTEL.a \
+       -lpthread -lm
+
+ccx_2.11_MT: $(OCCXMAIN) ccx_2.11_MT.a  $(LIBS)
+	./date.pl; $(CC) $(CFLAGS) -c ccx_2.11.c; $(FC) -qopenmp -parallel -nofor-main -o $@ $(OCCXMAIN) ccx_2.11_MT.a $(LIBS) -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread
+
+ccx_2.11_MT.a: $(OCCXF) $(OCCXC)
+	ar vr $@ $?

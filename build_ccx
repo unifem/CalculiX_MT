@@ -1,0 +1,15 @@
+#!/bin/bash
+
+echo "** Building ARPACK - may take several minutes! **"
+echo
+cd ARPACK; make lib; make clean; cd ..
+
+echo "** Building Spooles - may take several minutes! **"
+echo
+cd SPOOLES.2.2; make lib; make clean; cd ..
+
+echo "** Building Calculix - may take several minutes! **"
+echo
+cd CalculiX/ccx_2.13/src/; make -f Makefile_MT; make -f Makefile_MT clean; cd ../../..
+
+cp CalculiX/ccx_2.13/src/ccx_2.13_MT ./; chmod 711 ccx_2.13_MT
